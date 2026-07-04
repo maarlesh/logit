@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.chojikun.logit.feature.auth.presentation.EntryScreen
 import com.chojikun.logit.core.presentation.MainViewModel
+import com.chojikun.logit.feature.auth.presentation.LoginScreen
 import com.chojikun.logit.feature.auth.presentation.RegisterScreen
 
 @Composable
@@ -45,7 +46,13 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
             Text(text = "Home Screen")
         }
         composable(Routes.LOGIN) {
-            Text(text = "Sign In Screen")
+            LoginScreen(
+                onNavigateToHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
         }
         composable(Routes.REGISTER) {
             RegisterScreen(
@@ -53,6 +60,9 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
                     navController.navigate(Routes.HOME) {
                         popUpTo(0) { inclusive = true }
                     }
+                },
+                onSigningInTapped = {
+                    navController.navigate(Routes.LOGIN)
                 }
             )
         }

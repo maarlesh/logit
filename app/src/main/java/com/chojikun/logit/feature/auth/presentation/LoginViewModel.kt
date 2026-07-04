@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chojikun.logit.core.network.util.ApiResult
+import com.chojikun.logit.feature.auth.domain.usecase.LoginUseCase
 import com.chojikun.logit.feature.auth.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
+    private val loginUseCase : LoginUseCase,
 ) : ViewModel() {
 
     var email by mutableStateOf("")
@@ -71,6 +73,25 @@ class LoginViewModel @Inject constructor(
             }
             isLoading = false
         }
+    }
+
+    fun onLoginClick(){
+        if(!validateLoginScreen()) return
+        viewModelScope.launch {
+            isLoading = true
+            authError = null
+            when (val result = loginUseCase(email, password)){
+                is ApiResult.Success -> _navigateToHome.send(Unit)
+                is ApiResult.Error   -> authError = result.message
+            }
+            isLoading = false
+        }
+    }
+
+    private fun validateLoginScreen() : Boolean{
+        emailError           = validateEmailOrNull(email)
+        passwordError        = validatePasswordOrNull(password)
+        return emailError == null && passwordError == null
     }
 
     fun clearAuthError() { authError = null }
