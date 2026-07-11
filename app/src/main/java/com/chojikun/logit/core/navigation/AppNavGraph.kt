@@ -18,11 +18,16 @@ import com.chojikun.logit.feature.auth.presentation.RegisterScreen
 fun AppNavGraph(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = hiltViewModel()
     val isFirstLaunch by viewModel.isFirstLaunch.collectAsStateWithLifecycle()
+    val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
-    if (isFirstLaunch == null) return
+    if (isFirstLaunch == null || isLoggedIn == null) return
 
-    val startDestination = if (isFirstLaunch == true) Routes.ENTRY else Routes.REGISTER
+    val startDestination = when {
+        isFirstLaunch == true -> Routes.ENTRY
+        isLoggedIn == true -> Routes.HOME
+        else -> Routes.LOGIN
+    }
 
     NavHost(
         navController = navController,
