@@ -82,9 +82,8 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout() : ApiResult<Nullable> {
         val refreshToken = sessionManager.getRefreshToken()
-        val accessToken = sessionManager.getAccessToken()
         val result = safeCall {
-            val response = api.logout(accessToken, refreshToken = refreshToken)
+            val response = api.logout(refreshToken = refreshToken)
             response.data
         }
         sessionManager.clearSession()

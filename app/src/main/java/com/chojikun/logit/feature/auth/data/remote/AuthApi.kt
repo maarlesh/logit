@@ -5,12 +5,12 @@ import com.chojikun.logit.feature.auth.data.model.ApiResponse
 import com.chojikun.logit.feature.auth.data.model.KdfParamsData
 import com.chojikun.logit.feature.auth.data.model.LoginData
 import com.chojikun.logit.feature.auth.data.model.LoginPayload
+import com.chojikun.logit.feature.auth.data.model.RefreshData
+import com.chojikun.logit.feature.auth.data.model.RefreshPayload
 import com.chojikun.logit.feature.auth.data.model.RegisterData
 import com.chojikun.logit.feature.auth.data.model.RegisterPayload
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -26,7 +26,9 @@ interface AuthApi {
 
     @POST("auth/logout")
     suspend fun logout(
-        @Header("Authorization") accessToken: String,
         @Body refreshToken: String
     ): ApiResponse<Nullable>
+
+    @POST("auth/refresh")
+    suspend fun refresh(@Body payload: RefreshPayload): ApiResponse<RefreshData>
 }

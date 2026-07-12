@@ -1,6 +1,7 @@
 package com.chojikun.logit.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +21,16 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
     val isFirstLaunch by viewModel.isFirstLaunch.collectAsStateWithLifecycle()
     val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
     val navController = rememberNavController()
+
+    // Fires when a background token refresh fails (refresh token expired/invalid) and the
+    // session gets force-cleared, so the user is kicked back to Login from wherever they are.
+    LaunchedEffect(Unit) {
+        viewModel.sessionExpired.collect {
+            navController.navigate(Routes.LOGIN) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
 
     if (isFirstLaunch == null || isLoggedIn == null) return
 

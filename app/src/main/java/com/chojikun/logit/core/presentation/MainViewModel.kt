@@ -6,6 +6,7 @@ import com.chojikun.logit.core.util.FirstLaunchManager
 import com.chojikun.logit.core.util.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,6 +23,8 @@ class MainViewModel @Inject constructor(
 
     val isLoggedIn: StateFlow<Boolean?> = sessionManager.isLoggedIn
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val sessionExpired: SharedFlow<Unit> = sessionManager.sessionExpired
 
     fun onEntryScreenDone() {
         viewModelScope.launch {
