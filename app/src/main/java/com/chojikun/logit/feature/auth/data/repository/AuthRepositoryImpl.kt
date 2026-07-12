@@ -80,11 +80,16 @@ class AuthRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun logout(payload : String) : ApiResult<Nullable> =
-        safeCall {
-            val response = api.logout(payload)
+    override suspend fun logout() : ApiResult<Nullable> {
+        val refreshToken = sessionManager.getRefreshToken()
+        val accessToken = sessionManager.getAccessToken()
+        val result = safeCall {
+            val response = api.logout(accessToken, refreshToken = refreshToken)
             response.data
         }
+        sessionManager.clearSession()
+        return result
+    }
 
     private suspend fun <T> safeCall(call: suspend () -> T): ApiResult<T> =
         try {

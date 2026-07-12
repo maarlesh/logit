@@ -1,6 +1,5 @@
 package com.chojikun.logit.core.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import com.chojikun.logit.feature.auth.presentation.EntryScreen
 import com.chojikun.logit.core.presentation.MainViewModel
 import com.chojikun.logit.feature.auth.presentation.LoginScreen
 import com.chojikun.logit.feature.auth.presentation.RegisterScreen
+import com.chojikun.logit.feature.home.presentation.HomeScreen
 
 @Composable
 fun AppNavGraph(modifier: Modifier = Modifier) {
@@ -48,7 +48,13 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
             )
         }
         composable(Routes.HOME) {
-            Text(text = "Home Screen")
+            HomeScreen(
+                onLoggedOut = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
         composable(Routes.LOGIN) {
             LoginScreen(

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class SessionManager @Inject constructor(
@@ -33,6 +34,10 @@ class SessionManager @Inject constructor(
         }
     }
 
+    suspend fun getRefreshToken(): String = context.dataStore.data.first()[refreshToken] ?: ""
+
+    suspend fun getAccessToken(): String = context.dataStore.data.first()[accessToken] ?: ""
+
     suspend fun updateSessionDetails(
         accessToken: String,
         refreshToken: String,
@@ -49,5 +54,9 @@ class SessionManager @Inject constructor(
             prefs[this.wrappedVaultKey] = wrappedVaultKey
             prefs[this.vaultKeyNonce] = vaultKeyNonce
         }
+    }
+
+    suspend fun clearSession() {
+        context.dataStore.edit { it.clear() }
     }
 }

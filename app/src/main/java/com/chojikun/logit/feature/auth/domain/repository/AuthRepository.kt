@@ -13,5 +13,5 @@ interface AuthRepository {
     suspend fun getKdfParams(email: String): ApiResult<KdfLookupResult>
     suspend fun login(payload: LoginPayload): ApiResult<LoginResult>
 
-    suspend fun logout(payload: String): ApiResult<Nullable>
+    suspend fun logout(): ApiResult<Nullable>
 }

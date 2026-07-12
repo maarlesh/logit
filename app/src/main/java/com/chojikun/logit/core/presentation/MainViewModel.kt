@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val firstLaunchManager: FirstLaunchManager,
-    private val sessionManager: SessionManager
+    sessionManager: SessionManager
 ) : ViewModel() {
 
     val isFirstLaunch: StateFlow<Boolean?> = firstLaunchManager.isFirstLaunch
